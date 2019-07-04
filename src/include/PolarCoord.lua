@@ -1,45 +1,30 @@
-PolarCoord = {
-  __call = function(X)
-    assert(#X>1,"table is not correct")
-    local rho = math.sqrt(math.pow(X[1],2) + math.pow(X[2],2))
-    local alpha = math.atan2(X[2],X[1])
-    alpha = math.abs(alpha) * 180 / math.pi 
---    if(alpha<0) then 
---      alpha = math.pi - alpha 
---    end 
-    local res = {rho,alpha}
-    return res
-  end,
-  
-  __index = function(X,k)
-    print("calling index ", X)
-  end,
+function dump(o)
+   if type(o) == 'table' then
+      local s = '{ '
+      for k,v in pairs(o) do
+         if type(k) ~= 'number' then k = '"'..k..'"' end
+         s = s .. '['..k..'] = ' .. dump(v) .. ','
+      end
+      return s .. '} '
+   else
+      return tostring(o)
+   end
+end
 
-  __add=function(X, Y) 
-    assert(#X==#Y, "add op size does not match")
-    local sum = {}
-    X = X()
-    Y = Y()
-    for i = 1, #X do 
-      sum[i] = X[i] + Y[i]
+randomGoal = function()
+    local random_axis = function()
+      local x = math.random()*10-5
+      return math.fmod(x,4)
     end
-    return sum  
-  end,
-  __sub=function(X,Y)
-    assert(#X==#Y, "sub op size does not match")
-    X = X()
-    Y = Y()
-    for i = 1, #X do 
-      X[i] = X[i] - Y[i]
-    end
-  return X 
-  
-  end, 
-  
-  __eq = function(X,Y)
-  
-    return X.value == Y.value
-  
-  end
+    local x =  random_axis()
+    local y =  random_axis()
+    return {x,y,0.05}
+end
 
-}
+--print(dump(randomGoal()))
+for i = 1,3 do
+pose = randomGoal()
+print(dump(pose))
+
+end
+
